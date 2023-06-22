@@ -1,0 +1,75 @@
+import random
+import datetime
+import time
+from telegram.ext import Updater, CommandHandler
+
+TOKEN = '5992209445:AAFisFE4hDY16HmU7Oiuf84bTz8an-ZAtiM'
+CHAT_ID = ' 5246874324'
+
+jogos_em_alta = [
+    "Fortune Tiger",
+    "Fortune Mouse",
+    "Fortune Ox",
+    "Fortune Rabbit",
+    "Ganesha Gold",
+    "Dragon Hatch",
+    "Dragon Tiger Luck",
+    "Bikini Paradise",
+    "Wild Bandito",
+    "Win Win Won",
+    "Circus Delight",
+    "Candy Bonanza",
+    "Jungle Delight"
+]
+
+def get_current_time():
+    current_time = datetime.datetime.now().strftime("%H:%M")
+    return current_time
+
+def generate_slot_predictions(mode, num_rounds):
+    predictions = []
+    for _ in range(num_rounds):
+        hour = random.randint(10, 23)
+        minute = random.randint(0, 59)
+        prediction = f"{hour:02d}:{minute:02d}"
+        predictions.append(prediction)
+
+    if mode == "rápido":
+        predictions = random.sample(predictions, num_rounds)
+    elif mode == "lento":
+        predictions = sorted(predictions)
+    
+    return predictions
+
+def generate_assertiveness_trend():
+    trends = ["Alto", "Baixo", "Médio"]
+    return random.choice(trends)
+
+def send_slot_predictions(update, context, args):
+    current_time = get_current_time()
+    mode = args[0] if args else "rápido"
+    num_rounds = int(args[1]) if len(args) > 1 else 10
+    predictions = generate_slot_predictions(mode, num_rounds)
+    trend = generate_assertiveness_trend()
+
+    message = "🎰 Palpites de Horários Mais Pagantes 🎰\n\n"
+    message += f"Horário Atual: {current_time}\n"
+    message += f"Tendência de Assertividade: {trend}\n"
+    message += f"Modo: {mode.capitalize()}\n"
+    message += f"Número de Rodadas: {num_rounds}\n\n"
+    message += "Próximos Horários Mais Pagantes:\n"
+    for index, prediction in enumerate(predictions, start=1):
+        jogo_em_alta = random.choice(jogos_em_alta)
+        message += f"{index}. {prediction} - {jogo_em_alta}\n"
+
+    context.bot.send_message(chat_id=CHAT_ID, text=message)
+
+def main():
+    updater = Updater(TOKEN, use_context=True)
+    dp = updater.dispatcher
+    dp.add_handler(CommandHandler("palpites", send_slot_predictions, pass_args=True))
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()

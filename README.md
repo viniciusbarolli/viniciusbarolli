@@ -13,7 +13,7 @@ import schedule
 import time
 
 # Insira seu token de API do Telegram aqui
-TOKEN = 'seu_token_aqui'
+TOKEN = '5992209445:AAFisFE4hDY16HmU7Oiuf84bTz8an-ZAtiM'
 
 # Criação do objeto bot
 bot = Bot(token=TOKEN)
@@ -27,7 +27,7 @@ def enviar_mensagem():
     bot.send_message(chat_id=chat_id, text=message_text)
 
 # Agendamento da tarefa para um horário específico
-schedule.every().day.at('09:00').do(enviar_mensagem)  # Exemplo: 09:00
+schedule.every().day.at('18:25').do(enviar_mensagem)  # Exemplo: 09:00
 
 # Loop principal para executar o programador de horários
 while True:
